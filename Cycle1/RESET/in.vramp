@@ -1,0 +1,677 @@
+units        real
+boundary     p p m
+atom_style   charge
+
+log          log_cycle_reset1.text
+read_data    set_cycle_1.data
+pair_style   reaxff NULL checkqeq yes
+pair_coeff   * * ffield_final_11122021 Mo S Au
+
+timestep     0.5
+thermo       1
+
+variable zmin1 equal bound(all,zmin)
+variable zmax1 equal ${zmin1}+18
+variable zmax2 equal bound(all,zmax)
+variable zmin2 equal ${zmax2}-18
+
+region       1 block INF INF INF INF 44.5 INF
+region       2 block INF INF INF INF INF 7
+region       4 block INF INF 0 18.5 23 28
+region       5 block INF INF 29 49  23 28
+
+region bound1 block 13 24 19.5 48.5 ${zmin1} ${zmax1} units box
+group z_left region bound1
+region bound2 block 13 24 19.5 48.5 ${zmin2} ${zmax2} units box
+group z_right region bound2
+
+group top_elec     region 1
+group bottom_elec  region 2
+group mono1       region 4
+group mono2       region 5
+
+fix top1      top_elec    setforce 0.0 0.0 0.0
+fix top2      bottom_elec setforce 0.0 0.0 0.0
+fix monolayer1      mono1   setforce 0.0 0.0 0.0
+fix monolayer2      mono2   setforce 0.0 0.0 0.0
+fix          0 all property/atom d_locpot d_lap
+compute      0 all property/atom d_locpot d_lap
+set          region bound1 d_locpot 0.0
+set          region bound2  d_locpot 0.0
+
+dump         dump_device all custom 1000 voltage_cycle_reset1.lammpstrj id type x y z ix iy iz vx vy vz q
+neigh_modify binsize 10
+neighbor 1 bin
+
+fix 1        all qeq/shielded 1  10.0 1.0e-6 1000 reaxff
+fix 3        all nph x 10 10 1000 y 10 10 1000 ptemp 300
+fix 4 all temp/berendsen 300 300 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt 0.0
+fix 5        all ave/time 1 2 4 f_2[1] f_2[2] file js_cycle_reset1.profile # this gives the current
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 310.24 310.24 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -0.73
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 332.67 332.67 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -1.46
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 354.81 354.81 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -2.19
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 376.65 376.65 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -2.92
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 398.20 398.20 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -3.65
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 419.46 419.46 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -4.38
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 440.44 440.44 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -5.11
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 461.13 461.13 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -5.84
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 481.55 481.55 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -6.57
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 501.70 501.70 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -7.3
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 521.57 521.57 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -8.03
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 541.19 541.19 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -8.76
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 560.53 560.53 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -9.49
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 579.62 579.62 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -10.22
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 598.46 598.46 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -10.95
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 617.04 617.04 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -11.68
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 635.38 635.38 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -12.41
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 653.47 653.47 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -13.14
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 671.31 671.31 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -13.87
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 688.92 688.92 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -14.6
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 706.30 706.30 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -15.33
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 723.44 723.44 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -16.06
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 740.35 740.35 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -16.79
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 757.03 757.03 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -17.52
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 773.50 773.50 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -18.25
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 789.74 789.74 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -18.98
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 805.77 805.77 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -19.71
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 821.58 821.58 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -20.44
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 837.18 837.18 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -21.17
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 852.57 852.57 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -21.9
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 867.75 867.75 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -22.63
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 882.73 882.73 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -23.36
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 897.52 897.52 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -24.09
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 912.10 912.10 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -24.82
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 926.49 926.49 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -25.55
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 940.69 940.69 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -26.28
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 954.69 954.69 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -27.01
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 968.51 968.51 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -27.74
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 982.15 982.15 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -28.47
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 995.60 995.60 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -29.2
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1008.87 1008.87 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -29.93
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1021.97 1021.97 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -30.66
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1034.89 1034.89 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -31.39
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1047.64 1047.64 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -32.12
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1060.21 1060.21 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -32.85
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1072.62 1072.62 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -33.58
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1084.86 1084.86 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -34.31
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1096.94 1096.94 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -35.04
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1108.86 1108.86 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -35.77
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1120.62 1120.62 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -36.5
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1132.22 1132.22 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -37.23
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1143.67 1143.67 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -37.96
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1132.22 1132.22 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -37.23
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1120.62 1120.62 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -36.5
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1108.86 1108.86 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -35.77
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1096.94 1096.94 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -35.04
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1084.86 1084.86 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -34.31
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1072.62 1072.62 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -33.58
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1060.21 1060.21 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -32.85
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1047.64 1047.64 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -32.12
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1034.89 1034.89 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -31.39
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1021.97 1021.97 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -30.66
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 1008.87 1008.87 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -29.93
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 995.60 995.60 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -29.2
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 982.15 982.15 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -28.47
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 968.51 968.51 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -27.74
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 954.69 954.69 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -27.01
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 940.69 940.69 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -26.28
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 926.49 926.49 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -25.55
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 912.10 912.10 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -24.82
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 897.52 897.52 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -24.09
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 882.73 882.73 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -23.36
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 867.75 867.75 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -22.63
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 852.57 852.57 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -21.9
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 837.18 837.18 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -21.17
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 821.58 821.58 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -20.44
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 805.77 805.77 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -19.71
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 789.74 789.74 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -18.98
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 773.50 773.50 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -18.25
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 757.03 757.03 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -17.52
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 740.35 740.35 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -16.79
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 723.44 723.44 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -16.06
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 706.30 706.30 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -15.33
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 688.92 688.92 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -14.6
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 671.31 671.31 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -13.87
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 653.47 653.47 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -13.14
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 635.38 635.38 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -12.41
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 617.04 617.04 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -11.68
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 598.46 598.46 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -10.95
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 579.62 579.62 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -10.22
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 560.53 560.53 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -9.49
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 541.19 541.19 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -8.76
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 521.57 521.57 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -8.03
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 501.70 501.70 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -7.3
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 481.55 481.55 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -6.57
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 461.13 461.13 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -5.84
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 440.44 440.44 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -5.11
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 419.46 419.46 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -4.38
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 398.20 398.20 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -3.65
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 376.65 376.65 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -2.92
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 354.81 354.81 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -2.19
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 332.67 332.67 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -1.46
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 310.24 310.24 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -0.73
+run 20000
+
+unfix 2
+unfix 4
+fix 4 all temp/berendsen 300.00 300.00 10
+fix 2 all echemdid 1 k 6.0 rc 4.0 norm 0.629967 nelec 10 z_left z_right volt -0.0
+run 20000
+
+write_data reset_cycle_1.data
